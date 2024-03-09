@@ -27,34 +27,34 @@ class AviationspiderSpider(scrapy.Spider):
                 item['fatalities'] = row.xpath('td[5]//text()').extract_first(),
                 item['location'] = row.xpath('td[6]//text()').extract_first(),
                 item['damage'] = row.xpath('td[8]//text()').extract_first(),
-                relative_wikibase_url = table_rows.xpath('td[1]//span//a/@href').extract_first()
-                wikibase_url = 'https://aviation-safety.net' + relative_wikibase_url
-                if wikibase_url is not None:
-                    yield scrapy.Request(url=wikibase_url, callback=self.parse_wikibase_page)
+                # relative_wikibase_url = table_rows.xpath('td[1]//span//a/@href').extract_first()
+                # wikibase_url = 'https://aviation-safety.net' + relative_wikibase_url
+                # if wikibase_url is not None:
+                #     yield scrapy.Request(url=wikibase_url, callback=self.parse_wikibase_page)
+                yield item
                 
 
-    def parse_wikibase_page(self, response):
-        title = response.css('div.pagetitle')
-        description = response.css('.innertube tr')
-        for title, description in zip(title, description ):
-            item = WikibaseItem()
-            item['ASN_id'] =  title.css('div::text').extract_first()
-            item['time'] = description[1].css('td.desc::text').extract_first()
-            item['owner_operator'] = description[3].css('td.desc::text').extract_first()
-            item['registration'] = description[4].css('td.desc::text').extract_first()
-            item['MSN'] = description[5].css('td.desc::text').extract_first()
-            item['manufacture_year'] = description[6].css('td.desc::text').extract_first()
-            item['engine_model'] = description[7].css('td.desc::text').extract_first()
-            item['fatalities'] = description[8].css('td.desc::text').extract_first()
-            item['aircraft_damage'] = description[9].css('td.desc::text').extract_first()
-            item['category'] = description[10].css('td.desc::text').extract_first()
-            item['location'] = description[11].css('td.desc::text').extract_first()
-            item['phase'] = description[12].css('td.desc::text').extract_first()
-            item['nature'] = description[13].css('td.desc::text').extract_first()
-            item['depature_airport'] = description[14].css('td.desc::text').extract_first()
-            item['depature_airport'] = description[15].css('td.desc::text').extract_first()
-            item['confidence_rating'] = description[16].css('td.desc::text').extract_first()
-            yield item
+    # def parse_wikibase_page(self, response):
+    #     description = response.xpath('//*[@class="desc"]')
+    #     for description in description:
+    #         item = WikibaseItem()
+    #         item['time'] = description[0].css('::text').extract_first()
+    #         item['type'] = description[1].css('a::text').extract_first()
+    #         item['owner_operator'] = description[2].css('::text').extract_first()
+    #         item['registration'] = description[3].css('::text').extract_first()
+    #         item['MSN'] = description[4].css('::text').extract_first()
+    #         item['manufacture_year'] = description[5].css('::text').extract_first()
+    #         item['engine_model'] = description[6].css('::text').extract_first()
+    #         item['fatalities'] = description[7].css('::text').extract_first()
+    #         item['aircraft_damage'] = description[8].css('::text').extract_first()
+    #         item['category'] = description[9].css('::text').extract_first()
+    #         item['location'] = description[10].css('::text').extract_first()
+    #         item['phase'] = description[11].css('::text').extract_first()
+    #         item['nature'] = description[12].css('::text').extract_first()
+    #         item['depature_airport'] = description[13].css('::text').extract_first()
+    #         item['depature_airport'] = description[14].css('::text').extract_first()
+    #         item['confidence_rating'] = description[15].css('::text').extract_first()
+    #         yield item
             
                     
                 
