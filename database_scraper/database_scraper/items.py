@@ -21,7 +21,8 @@ class AviationDatabaseItem(scrapy.Item):
     damage = scrapy.Field()
 
 class WikibaseItem(scrapy.Item):
-    ASN_id =  scrapy.Field()
+    date = scrapy.Field()
+    type =  scrapy.Field()
     time = scrapy.Field()
     owner_operator = scrapy.Field()
     registration = scrapy.Field()

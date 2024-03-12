@@ -27,34 +27,33 @@ class AviationspiderSpider(scrapy.Spider):
                 item['fatalities'] = row.xpath('td[5]//text()').extract_first(),
                 item['location'] = row.xpath('td[6]//text()').extract_first(),
                 item['damage'] = row.xpath('td[8]//text()').extract_first(),
-                # relative_wikibase_url = table_rows.xpath('td[1]//span//a/@href').extract_first()
-                # wikibase_url = 'https://aviation-safety.net' + relative_wikibase_url
-                # if wikibase_url is not None:
-                #     yield scrapy.Request(url=wikibase_url, callback=self.parse_wikibase_page)
-                yield item
+                relative_wikibase_url = table_rows.xpath('td[1]//span//a/@href').extract_first()
+                wikibase_url = 'https://aviation-safety.net' + relative_wikibase_url
+                if wikibase_url is not None:
+                    yield scrapy.Request(url=wikibase_url, callback=self.parse_wikibase_page)
                 
 
-    # def parse_wikibase_page(self, response):
-    #     description = response.xpath('//*[@class="desc"]')
-    #     for description in description:
-    #         item = WikibaseItem()
-    #         item['time'] = description[0].css('::text').extract_first()
-    #         item['type'] = description[1].css('a::text').extract_first()
-    #         item['owner_operator'] = description[2].css('::text').extract_first()
-    #         item['registration'] = description[3].css('::text').extract_first()
-    #         item['MSN'] = description[4].css('::text').extract_first()
-    #         item['manufacture_year'] = description[5].css('::text').extract_first()
-    #         item['engine_model'] = description[6].css('::text').extract_first()
-    #         item['fatalities'] = description[7].css('::text').extract_first()
-    #         item['aircraft_damage'] = description[8].css('::text').extract_first()
-    #         item['category'] = description[9].css('::text').extract_first()
-    #         item['location'] = description[10].css('::text').extract_first()
-    #         item['phase'] = description[11].css('::text').extract_first()
-    #         item['nature'] = description[12].css('::text').extract_first()
-    #         item['depature_airport'] = description[13].css('::text').extract_first()
-    #         item['depature_airport'] = description[14].css('::text').extract_first()
-    #         item['confidence_rating'] = description[15].css('::text').extract_first()
-    #         yield item
-            
-                    
+    def parse_wikibase_page(self, response):
+        table_rows = response.xpath('//table//tr')
+        item = WikibaseItem()
+        item['date'] = table_rows[0].xpath('td[2]/text()').extract_first()
+        item['time'] = table_rows[1].xpath('td[@class="desc"]/text()').extract_first()
+        item['type'] = table_rows[2].css('td a ::text').extract_first()
+        item['owner_operator'] = table_rows[3].xpath('td[@class="desc"]/text()').extract_first()
+        item['registration'] = table_rows[4].xpath('td[@class="desc"]/text()').extract_first()
+        item['MSN'] = table_rows[5].xpath('td[@class="desc"]/text()').extract_first()
+        item['manufacture_year'] =  table_rows[6].xpath('td[@class="desc"]/text()').extract_first()
+        item['engine_model'] = table_rows[7].xpath('td[@class="desc"]/text()').extract_first()
+        item['fatalities'] = table_rows[8].xpath('td[@class="desc"]/text()').extract_first()
+        item['aircraft_damage'] = table_rows[9].xpath('td[@class="desc"]/text()').extract_first()
+        item['category'] = table_rows[10].xpath('td[@class="desc"]/text()').extract_first()
+        item['location'] = table_rows[11].xpath('td[@class="desc"]/text()').extract_first()
+        item['phase'] = table_rows[12].xpath('td[@class="desc"]/text()').extract_first()
+        item['nature'] = table_rows[13].xpath('td[@class="desc"]/text()').extract_first()
+        item['depature_airport'] = table_rows[14].xpath('td[@class="desc"]/text()').extract_first()
+        item['depature_airport'] = table_rows[15].xpath('td[@class="desc"]/text()').extract_first()
+        item['confidence_rating'] = table_rows[16].xpath('td[@class="desc"]/text()').extract_first()
+        yield item
+        
                 
+            
