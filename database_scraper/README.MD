@@ -1,0 +1,5 @@
+This Web Crawler is purely for educational purposes, the data data is the sole propriety of the Flight Safety Foundation.
+
+This web crawler is designed to scrape the aviation safety database utlizing the scrapy package. 
+
+
