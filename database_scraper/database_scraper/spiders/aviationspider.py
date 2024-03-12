@@ -19,14 +19,6 @@ class AviationspiderSpider(scrapy.Spider):
     def parse_database_page(self, response):
         table_rows = response.xpath('//*[@class="hp"]//tr')
         for row in table_rows[1:]:
-                item = AviationDatabaseItem()
-                item['accident_date'] = row.xpath('td[1]//text()').extract_first(),
-                item['aircraft_type'] = row.xpath('td[2]//text()').extract_first(),
-                item['registration_no'] = row.xpath('td[3]//text()').extract_first(),
-                item['operator'] = row.xpath('td[4]//text()').extract_first(),
-                item['fatalities'] = row.xpath('td[5]//text()').extract_first(),
-                item['location'] = row.xpath('td[6]//text()').extract_first(),
-                item['damage'] = row.xpath('td[8]//text()').extract_first(),
                 relative_wikibase_url = row.xpath('td[1]//span//a/@href').extract_first()
                 wikibase_url = 'https://aviation-safety.net' + relative_wikibase_url
                 if wikibase_url is not None:
