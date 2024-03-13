@@ -9,5 +9,5 @@ After the intial run of the code I noticed that not all the table rows are the s
 
 ![screenshot1](/Users/aranfernando/analysis/aviation/aviation_analysis/screenshots/screenshot1.png)
 
-The way around this was to use a elif statement in order to pick and chose which indices needed to picked out and differnt table row counts.
+The way around this was to use a elif statement in order to pick and chose which indices needed to picked out and different table row counts.
 
