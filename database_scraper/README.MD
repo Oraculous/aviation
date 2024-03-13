@@ -7,7 +7,7 @@ The ASN Safety Database is updated daily and contains descriptions of airlines, 
 
 After the intial run of the code I noticed that not all the table rows are the same. Drawing attention to the screenshot below there appered to be a vast number of different table row counts across some of the wikibase pages. This caused one major problem in the code - some of the assigned item did not get parsed into the respective column names. 
 
-![screenshot1](/Users/aranfernando/analysis/aviation/aviation_analysis/screenshots/Screenshot 2024-03-13 at 10.02.38 AM.png)
+![screenshot1](/Users/aranfernando/analysis/aviation/aviation_analysis/screenshots/screenshot1.png)
 
 The way around this was to use a elif statement in order to pick and chose which indices needed to picked out and differnt table row counts.
 
