@@ -7,6 +7,9 @@ The ASN Safety Database is updated daily and contains descriptions of airlines, 
 
 The total number of items scraped is 16.766.
 
+> [!NOTE]
+> Next step is to clean the scraped data using item pipelines. 
+
 
 
 
