@@ -9,13 +9,15 @@ class AviationspiderSpider(CrawlSpider):
     start_urls = ["https://aviation-safety.net/database"]
     rules = (
         Rule(
+        # The rule is to allow CrawlSpider to work within "/wikibase/" and callback the parse_wikibase_page function
               LinkExtractor(allow=('/wikibase/', )), callback='parse_wikibase_page'),
         Rule(
+        # This rule is to allow CrawlSpider to work within "/year/" and callbacl the next_page function
               LinkExtractor(allow=('/year/', )), callback='next_page')
     )
                               
     def parse(self, response):
-    ## This function will iterate over all of the year in the starting page. 
+    ## This function will iterate over all of the years in the starting page. 
         for year in response.css('a[href^="/database/year"]'):
             relative_url = year.css('a').attrib['href']
             next_year_url = 'https://aviation-safety.net' + relative_url
@@ -26,7 +28,7 @@ class AviationspiderSpider(CrawlSpider):
                 yield scrapy.Request(url=next_year_url, callback=self.next_page)
             
     def next_page(self, response):
-        ## This function will look for the page numbers
+        ## This function will look for the page numbers within the specific years
         for page in response.css('a[href^="/database/year"]'):
                 relative_url = page.css('a').attrib['href']
                 next_page_url = 'https://aviation-safety.net' + relative_url
