@@ -14,6 +14,9 @@ This web crawler is designed to scrape websites into a structured json file for 
 
 The crawler used is called [Scrapy](https://github.com/scrapy/scrapy) and it is a web-scraping framework designed to crawl websites and extract structured data from their pages. More information can be found on the [Scrapy Homepage](https://scrapy.org/)
 
+## Item Pipelines
+
+
 
 
 
