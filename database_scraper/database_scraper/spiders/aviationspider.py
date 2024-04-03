@@ -10,10 +10,14 @@ class AviationspiderSpider(CrawlSpider):
     rules = (
         Rule(
         # The rule is to allow CrawlSpider to work within "/wikibase/" and callback the parse_wikibase_page function
-              LinkExtractor(allow=('/wikibase/', )), callback='parse_wikibase_page'),
+              LinkExtractor(allow=('/wikibase/', )), callback='parse_database_page'),
         Rule(
         # This rule is to allow CrawlSpider to work within "/year/" and callbacl the next_page function
-              LinkExtractor(allow=('/year/', )), callback='next_page')
+              LinkExtractor(allow=('/year/', )), callback='parse'),
+        Rule(
+              LinkExtractor(allow=('/year/', )), callback='next_page'),
+        Rule(
+              LinkExtractor(allow=('/year/', )), callback='parse_database_page')
     )
                               
     def parse(self, response):
@@ -25,18 +29,18 @@ class AviationspiderSpider(CrawlSpider):
             if next_year_url is not None:
                 yield scrapy.Request(url=next_year_url, callback=self.parse_database_page)
             else:
-                yield scrapy.Request(url=next_year_url, callback=self.next_page)
+                 continue
             
     def next_page(self, response):
         ## This function will look for the page numbers within the specific years
-        for page in response.css('a[href^="/database/year"]'):
+        for page in response.css('div.pagenumbers a'):
                 relative_url = page.css('a').attrib['href']
                 next_page_url = 'https://aviation-safety.net' + relative_url
                 
                 if next_page_url is not None:
                     yield scrapy.Request(url=next_page_url, callback=self.parse_database_page)
                 else:
-                    pass
+                     continue
 
     def parse_database_page(self, response):
     ## This function is to loop over the each of the links that goes into the wikibase page
