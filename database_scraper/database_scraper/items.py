@@ -34,6 +34,8 @@ class WikibaseItem(scrapy.Item):
     cycles = scrapy.Field()
     engine_model = scrapy.Field()
     fatalities = scrapy.Field()
+    fatalities_count = scrapy.Field()
+    occupants_count = scrapy.Field()
     other_fatalities = scrapy.Field()
     aircraft_damage = scrapy.Field()
     category = scrapy.Field()
