@@ -2,8 +2,19 @@ import scrapy
 from database_scraper.items import AviationDatabaseItem, WikibaseItem
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
+from scrapy.statscollectors import StatsCollector
+from scrapy.utils.serialize import ScrapyJSONEncoder
+
+class MemoryStatsCollector(StatsCollector):
+    def _persist_stats(self, stats, spider):
+        encoder = ScrapyJSONEncoder()
+        with open("stats.json", "w") as file:
+            data = encoder.encode(stats)
+            file.write(data)
+
 
 class AviationspiderSpider(CrawlSpider):
+
     name = "aviationspider"
     allowed_domains = ["aviation-safety.net"]
     start_urls = ["https://aviation-safety.net/database"]
@@ -80,8 +91,10 @@ class AviationspiderSpider(CrawlSpider):
         item['destination_airport'] = table_rows.xpath('//td[text() = "Destination airport:"]/following-sibling::td/text()').extract_first()
         item['investigating_agency'] = table_rows.xpath('//td[text() = "Investigating agency:"]/following-sibling::td/text()').extract_first()
         item['confidence_rating'] = table_rows.xpath('//td[text() = "Confidence Rating:"]/following-sibling::td/text()').extract_first()
+        item['url'] = response.url
         yield item
 
+        
 
 
 

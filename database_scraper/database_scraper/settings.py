@@ -62,8 +62,11 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   "database_scraper.pipelines.DatabaseScraperPipeline": 300,
-   "database_scraper.pipelines.DuplicatesPipeline": 400,
+   "database_scraper.pipelines.DatabaseScraperPipeline": 200,
+   "database_scraper.pipelines.DuplicatesPipeline": 300
+
+   
+   
 }
 
 

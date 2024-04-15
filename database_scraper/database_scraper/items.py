@@ -41,9 +41,13 @@ class WikibaseItem(scrapy.Item):
     category = scrapy.Field()
     accident_location = scrapy.Field()
     accident_location_country = scrapy.Field()
+    location = scrapy.Field()
     phase = scrapy.Field()
     nature = scrapy.Field()
     depature_airport = scrapy.Field()
     destination_airport = scrapy.Field()
     investigating_agency = scrapy.Field()
     confidence_rating = scrapy.Field()
+    date_time = scrapy.Field()
+    url = scrapy.Field()
+ 
