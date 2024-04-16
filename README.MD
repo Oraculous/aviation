@@ -27,7 +27,7 @@ Next was to convert the date column from string to DateTime.
 
 The cleaned dataset was then uploaded into PostGreSQL. A copy of the dataset was also saved in the repository as aviaition_database_output_cleaned. 
 
-The next step is to perform exploratory dataanalysis (EDA) on the data to gather insights and perform more data cleaning if required. 
+The next step is to perform exploratory data analysis (EDA) on the data to gather insights and perform more data cleaning if required. 
 
 
 
