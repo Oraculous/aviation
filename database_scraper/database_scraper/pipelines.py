@@ -11,6 +11,7 @@ from datetime import datetime
 from dateutil.parser import parse
 import dateutil
 from scrapy.exceptions import DropItem
+import psycopg2
 
 
 class DatabaseScraperPipeline:
@@ -65,6 +66,13 @@ class DatabaseScraperPipeline:
         else:
             adapter['phase']  = None
 
+        # Removing trailing spaces from aircraft_damage
+        aircraft_damage_string = adapter.get('aircraft_damage')
+        if aircraft_damage_string != '':
+            adapter['aircraft_damage']  = phase_string.strip()    
+        else:
+            adapter['aircraft_damage']  = None
+
         # Return fatalities and occupants in seperate columns
         accident_location_string = adapter.get('fatalities')
         split_string_array = accident_location_string.split('/')
@@ -87,47 +95,20 @@ class DatabaseScraperPipeline:
             adapter['fatalities_count'] = int(float(fatalities)) 
             adapter['occupants_count'] = int(float(occupants))
 
-        # Merge date & time -> Convert string  -> datetime
+        # Convert string  -> datetime
         date_string = adapter.get('date')
-        if date_string != '':
-            split_date_string_array = date_string.split(' ')
-            match_string = re.match(r'[xx]', split_date_string_array[0])
-            if match_string != '':
-                date_string = None
 
-        time_string = adapter.get('time')
-        if time_string !=  None:
-            split_time_string_array = time_string.split(' ')
-            match_string = re.match(r'^[a-m]', split_time_string_array[0])
-            if match_string is not None:
-                time_string = None
-
-        # define a 'LT' time zone:
-        tzmapping = {'LT': dateutil.tz.gettz('Europe/Vilnius')}
-
-        if time_string == None and date_string != None:
-            date_time_string_parse  = parse(date_string).strftime('%A %d %B %Y')
-            adapter['date_time'] = datetime.strptime(date_time_string_parse, '%A %d %B %Y')
-
-        elif date_string == None:
-            adapter['date_time'] = None
-
-        elif date_string and time_string != None:
-            date_time_string = ' '.join([date_string, time_string])
-            date_time_string_parse  = parse(date_time_string, tzinfos=tzmapping).strftime('%A %d %B %Y %H:%M')
-            adapter['date_time'] = datetime.strptime(date_time_string_parse.strip(), '%A %d %B %Y %H:%M')
-
+        if date_string and not re.match(r'(?:xx|unk\.)', date_string):
+            adapter['date'] = datetime.strptime(date_string, '%A %d %B %Y')
         else:
-            date_time_string = ' '.join([date_string, time_string])
-            date_time_string_parse  = parse(date_time_string, tzinfos=tzmapping).strftime('%A %d %B %Y %H:%M %Z')
-            adapter['date_time'] = datetime.strptime(date_time_string_parse.strip(), '%A %d %B %Y %H:%M %Z')
+            adapter['date'] = None
 
-        # String -> Datetime "manufacture year"
+        # String -> int "manufacture year"
         manufature_year_string = adapter.get('manufacture_year')
         if manufature_year_string != None:
-            adapter['date_time'] = datetime.strptime(manufature_year_string, '%Y')
+            adapter['manufacture_year'] = int(manufature_year_string)
         else:
-            adapter['date_time'] = None
+            adapter['manufacture_year'] = None
 
         
         # "total_airframe_hours" split string -> convert to int
@@ -137,10 +118,16 @@ class DatabaseScraperPipeline:
             adapter['total_airframe_hours'] = int(total_airframe_hours_string_split[0])
         elif total_airframe_hours_string == None:
             adapter['total_airframe_hours'] = None
-        return item
-    
 
-    
+        # "cycles" split string -> convert to int
+        cycles_string = adapter.get('cycles')
+        if cycles_string != None:
+            cycles_string = cycles_string.split(' ')
+            adapter['cycles'] = int(cycles_string[0])
+        elif cycles_string == None:
+            adapter['cycles'] = None
+        return item
+
 class DuplicatesPipeline:
     # Drop duplicates that is found
     def __init__(self):
@@ -153,3 +140,57 @@ class DuplicatesPipeline:
         else:
             self.ids_seen.add(adapter["url"])
             return item
+
+class SavingToMyPostGresPipeline(object):
+    def __init__(self):
+        self.create_connection()
+    
+    def create_connection(self):
+        self.connection = psycopg2.connect(
+        host = 'localhost',
+        user = 'aranfernando',
+        password = '',
+        database = 'aranfernando',
+        port = '5432'
+        )
+        self.curr = self.connection.cursor()
+    
+    def process_item(self, item, spider):
+        self.store_db(item)
+        return item
+    
+    def store_db(self, item):
+        try:
+            self.curr.execute(""" insert into aviation_accidents (id, date, occupants_count, fatalities_count, location, url, confidence_rating, investigating_agency, depature_airport, destination_airport, 
+                            nature, phase, category, aircraft_damage, other_fatalities, cycles, total_airframe_hours, engine_model, manufacture_year, msn, registration, owner_operator, type) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 
+                            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
+                            (
+                            item['ID'], 
+                            item['date'], 
+                            item['occupants_count'],
+                            item['fatalities_count'],
+                            item['location'], 
+                            item['url'], 
+                            item['confidence_rating'], 
+                            item['investigating_agency'], 
+                            item['depature_airport'], 
+                            item['destination_airport'],
+                            item['nature'], 
+                            item['phase'],
+                            item['category'], 
+                            item['aircraft_damage'], 
+                            item['other_fatalities'], 
+                            item['cycles'], 
+                            item['total_airframe_hours'], 
+                            item['engine_model'], 
+                            item['manufacture_year'], 
+                            item['MSN'], 
+                            item['registration'], 
+                            item['owner_operator'],
+                            item['type']
+                            ))
+        except BaseException as e:
+            print(e)
+        self.connection.commit()
+
+

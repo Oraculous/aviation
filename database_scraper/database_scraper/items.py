@@ -48,6 +48,5 @@ class WikibaseItem(scrapy.Item):
     destination_airport = scrapy.Field()
     investigating_agency = scrapy.Field()
     confidence_rating = scrapy.Field()
-    date_time = scrapy.Field()
     url = scrapy.Field()
  

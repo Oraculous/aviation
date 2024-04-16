@@ -21,6 +21,21 @@ The "ID" column were cleaned to only include the wikibase number and "accident_l
 
 In addition the Fatalities columns was split into two other columns each designating the number of fatalities and the number of occupants. This is to distinguish the difference in casualties. 
 
+The phase, registration and MSN columns was observed to contain trailing spaces - these were cleaned using a simple strip function.
+
+Next was to convert the date column from string to DateTime.
+
+The cleaned dataset was then uploaded into PostGreSQL. A copy of the dataset was also saved in the repository as aviaition_database_output_cleaned. 
+
+The next step is to perform exploratory dataanalysis (EDA) on the data to gather insights and perform more data cleaning if required. 
+
+
+
+
+
+
+
+
 
 
 
