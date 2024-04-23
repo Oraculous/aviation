@@ -131,29 +131,52 @@ class DatabaseScraperPipeline:
 class DuplicatesPipeline:
     # Drop duplicates that is found
     def __init__(self):
-        self.ids_seen = set()
+        self.url_seen = set()
 
     def process_item(self, item, spider):
         adapter = ItemAdapter(item)
-        if adapter["url"] in self.ids_seen:
+        if adapter["url"] in self.url_seen:
             raise DropItem(f"Duplicate item found: {item!r}")
         else:
-            self.ids_seen.add(adapter["url"])
+            self.url_seen.add(adapter["url"])
             return item
 
 class SavingToMyPostGresPipeline(object):
     def __init__(self):
-        self.create_connection()
-    
-    def create_connection(self):
         self.connection = psycopg2.connect(
         host = 'localhost',
         user = 'aranfernando',
-        password = '',
         database = 'aranfernando',
         port = '5432'
         )
         self.curr = self.connection.cursor()
+
+        self.curr.execute("""
+        CREATE TABLE IF NOT EXISTS aviation(
+                        id INTEGER,
+                        date DATE,
+                        occupants_count INTEGER,
+                        fatalities_count INTEGER,
+                        location VARCHAR(500),
+                        url VARCHAR(150),
+                        confidence_rating VARCHAR(500),
+                        investigating_agency  VARCHAR(500),
+                        depature_airport VARCHAR(500),
+                        destination_airport VARCHAR(500),
+                        nature VARCHAR(50),
+                        phase VARCHAR(50),
+                        category VARCHAR(50),
+                        aircraft_damage VARCHAR(50),
+                        other_fatalities INTEGER,
+                        cycles INTEGER,
+                        total_airframe_hours INTEGER,
+                        engine_model VARCHAR(150),
+                        manufacture_year INTEGER,
+                        MSN VARCHAR(150),
+                        registration VARCHAR(150),
+                        owner_operator VARCHAR(150),
+                        type VARCHAR(150)
+        )""")
     
     def process_item(self, item, spider):
         self.store_db(item)
@@ -161,7 +184,7 @@ class SavingToMyPostGresPipeline(object):
     
     def store_db(self, item):
         try:
-            self.curr.execute(""" insert into aviation_accidents (id, date, occupants_count, fatalities_count, location, url, confidence_rating, investigating_agency, depature_airport, destination_airport, 
+            self.curr.execute(""" insert into aviation(id, date, occupants_count, fatalities_count, location, url, confidence_rating, investigating_agency, depature_airport, destination_airport, 
                             nature, phase, category, aircraft_damage, other_fatalities, cycles, total_airframe_hours, engine_model, manufacture_year, msn, registration, owner_operator, type) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 
                             %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
                             (
@@ -192,5 +215,10 @@ class SavingToMyPostGresPipeline(object):
         except BaseException as e:
             print(e)
         self.connection.commit()
+
+    def close_spider(self, spider):
+        ## Close cursor & connection to database 
+        self.curr.close()
+        self.connection.close()
 
 
