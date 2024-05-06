@@ -29,8 +29,23 @@ The cleaned dataset was then uploaded into PostgreSQL. A copy of the dataset was
 
 The next step is to perform exploratory data analysis (EDA) on the data to gather insights and perform more data cleaning if required. 
 
+### Exploratory Data Analysis
+The scraped dataset consists of 33582 records of aircraft incidents and 23 features.
+
+These are 'id', 'date', 'occupants_count', 'fatalities_count', 'location', 'url',
+'confidence_rating', 'investigating_agency', 'depature_airport' 'destination_airport', 'nature', 'phase', 'category', 'aircraft_damage',
+'other_fatalities', 'cycles', 'total_airframe_hours', 'engine_model',
+'manufacture_year', 'msn', 'registration', 'owner_operator', and 'type'
+
+Lets first take a look at the sum of all fatalities by their nature
 
 <div align="center"><img width="468" alt="image" src="aviation_analysis/newplot1.png"></div>
+
+Now lets take a look at the manufacture year of the aircraft by their category.
+
+<div align="center"><img width="468" alt="image" src="aviation_analysis/newplot2.png"></div>
+
+
 
 
 
