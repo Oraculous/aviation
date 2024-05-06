@@ -29,9 +29,8 @@ The cleaned dataset was then uploaded into PostgreSQL. A copy of the dataset was
 
 The next step is to perform exploratory data analysis (EDA) on the data to gather insights and perform more data cleaning if required. 
 
-### Exploratory Data Analysis
 
-<div align="center"><img width="468" alt="image" src="/Users/aranfernando/analysis/aviation/aviation_analysis/newplot.png"></div>
+<div align="center"><img width="468" alt="image" src="aviation_analysis/newplot1.png"></div>
 
 
 
