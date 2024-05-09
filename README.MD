@@ -37,11 +37,15 @@ These are 'id', 'date', 'occupants_count', 'fatalities_count', 'location', 'url'
 'other_fatalities', 'cycles', 'total_airframe_hours', 'engine_model',
 'manufacture_year', 'msn', 'registration', 'owner_operator', and 'type'
 
-Lets first take a look at the sum of all fatalities by their nature
+Lets first take a look at the sum of all fatalities by the nature of the aicraft within a ten year span. 
+
+We can observe that when comparing the two highest group of years, 1940 to 1949 contained more accidents of military aircraft and between 1970 to 1979 contained more accidents with passenger aircraft.
 
 <div align="center"><img width="468" alt="image" src="aviation_analysis/newplot1.png"></div>
 
-Now lets take a look at the manufacture year of the aircraft by their category.
+Now lets take a look at the manufacture year of the aircraft by the accident category within a ten year span.
+
+We can observe that most of aircraft accidents occured between 1940 and 1949. 
 
 <div align="center"><img width="468" alt="image" src="aviation_analysis/newplot2.png"></div>
 
