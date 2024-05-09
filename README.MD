@@ -29,7 +29,7 @@ The cleaned dataset was then uploaded into PostgreSQL. A copy of the dataset was
 
 The next step is to perform exploratory data analysis (EDA) on the data to gather insights and perform more data cleaning if required. 
 
-### Exploratory Data Analysis
+## Exploratory Data Analysis
 The scraped dataset consists of 33582 records of aircraft incidents and 23 features.
 
 These are 'id', 'date', 'occupants_count', 'fatalities_count', 'location', 'url',
