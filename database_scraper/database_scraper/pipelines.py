@@ -69,7 +69,7 @@ class DatabaseScraperPipeline:
         # Removing trailing spaces from aircraft_damage
         aircraft_damage_string = adapter.get('aircraft_damage')
         if aircraft_damage_string != '':
-            adapter['aircraft_damage']  = phase_string.strip()    
+            adapter['aircraft_damage']  = aircraft_damage_string.strip()    
         else:
             adapter['aircraft_damage']  = None
 
@@ -166,7 +166,7 @@ class SavingToMyPostGresPipeline(object):
                         nature VARCHAR(50),
                         phase VARCHAR(50),
                         category VARCHAR(50),
-                        aircraft_damage VARCHAR(50),
+                        aircraft_damage VARCHAR(100),
                         other_fatalities INTEGER,
                         cycles INTEGER,
                         total_airframe_hours INTEGER,
@@ -185,8 +185,8 @@ class SavingToMyPostGresPipeline(object):
     def store_db(self, item):
         try:
             self.curr.execute(""" insert into aviation(id, date, occupants_count, fatalities_count, location, url, confidence_rating, investigating_agency, depature_airport, destination_airport, 
-                            nature, phase, category, aircraft_damage, other_fatalities, cycles, total_airframe_hours, engine_model, manufacture_year, msn, registration, owner_operator, type) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 
-                            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
+                            nature, phase, category, aircraft_damage, other_fatalities, cycles, total_airframe_hours, engine_model, manufacture_year, msn, registration, owner_operator, type) values 
+                            (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
                             (
                             item['ID'], 
                             item['date'], 
