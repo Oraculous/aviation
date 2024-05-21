@@ -64,7 +64,8 @@ ROBOTSTXT_OBEY = True
 ITEM_PIPELINES = {
    "database_scraper.pipelines.DatabaseScraperPipeline": 200,
    "database_scraper.pipelines.DuplicatesPipeline": 300,
-   "database_scraper.pipelines.SavingToMyPostGresPipeline": 400
+   # "database_scraper.pipelines.SavingToMyPostGresPipeline": 400
+   "database_scraper.pipelines.PostgresNoDuplicatesPipeline": 400
 
    
    
